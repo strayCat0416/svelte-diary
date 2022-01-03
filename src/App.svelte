@@ -11,11 +11,6 @@
 <main>
 	<Header />
 	<Router url="{url}">
-		<nav>
-		  <Link to="/">Home</Link>
-		  <Link to="about">About</Link>
-		  <Link to="create">Create</Link>
-		</nav>
 		  <Route path="diary/:id" component="{Diary}" />
 		  <Route path="create" component="{Create}" />
 		  <Route path="about" component="{About}" />
