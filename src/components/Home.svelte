@@ -1,5 +1,8 @@
 <script>
-
+    import {
+    Button
+  } from "smelte";
 </script>
 
-<p>Home</p>
+<p>HOME</p>
+<Button>テストボタン</Button>
