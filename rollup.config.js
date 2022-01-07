@@ -4,6 +4,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import {terser} from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
+import dotenv from 'dotenv';
+import replace from '@rollup/plugin-replace';
+dotenv.config();
 
 const smelte = require('smelte/rollup-plugin-smelte');
 const production = !process.env.ROLLUP_WATCH;
@@ -42,6 +45,15 @@ export default {
     file: 'public/build/bundle.js',
   },
   plugins: [
+    replace({
+      FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
+      FIREBASE_AUTH_DOMAIN: JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
+      FIREBASE_PROJECT_ID: JSON.stringify(process.env.FIREBASE_PROJECT_ID),
+      FIREBASE_STORAGE_BUCKET: JSON.stringify(
+        process.env.FIREBASE_STORAGE_BUCKET,
+      ),
+      FIREBASE_API_ID: JSON.stringify(process.env.FIREBASE_API_ID),
+    }),
     svelte({
       compilerOptions: {
         // enable run-time checks when not in production
