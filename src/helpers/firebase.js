@@ -1,6 +1,14 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from 'firebase/app';
-import {getAuth, signInWithPopup, GoogleAuthProvider} from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+} from 'firebase/auth';
+import {userId} from '../store';
+import Cookies from 'js-cookie';
+
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -14,7 +22,6 @@ const firebaseConfig = {
   messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
   appId: FIREBASE_APP_ID,
 };
-console.log(firebaseConfig);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -29,7 +36,10 @@ export const signInWithGoogle = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       // The signed-in user info.
-      const user = result.user;
+      const user = result.user.uid;
+      // userId = result.user;
+      userId.set(result.user.uid);
+      Cookies.set('uid', result.user.uid);
       // ...
     })
     .catch(error => {
@@ -41,5 +51,20 @@ export const signInWithGoogle = () => {
       // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
       // ...
+    });
+};
+
+export const googleSignOut = () => {
+  signOut(auth)
+    .then(() => {
+      // Cookieの削除
+      Cookies.remove('uid');
+      //画面を更新
+      document.location.reload();
+    })
+    .catch(error => {
+      alert(
+        'ログアウトできませんでした。通信環境の良い場所で再度実行してください',
+      );
     });
 };
