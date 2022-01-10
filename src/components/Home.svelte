@@ -1,7 +1,17 @@
 <script>
-    import {
-    Button
-  } from "smelte";
+    import {onMount,onDestroy} from "svelte";
+    import {Button} from "smelte";
+    import {userId} from "../store";
+    import {fetch} from "../helpers/api";
+
+  let uid;
+  const unsubscribe = userId.subscribe(id => uid = id);
+  let promise;
+  onMount( async()=>{
+    promise = fetch(uid);
+    console.log(promise);
+  })
+  onDestroy(() =>{unsubscribe;});
 </script>
 
 <p>HOME</p>
