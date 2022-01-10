@@ -9,7 +9,7 @@ import {
 import {db} from './firebase';
 import dayjs from 'dayjs';
 
-export const fetch = async uid => {
+export const fetch = async (uid = '') => {
   const q = query(
     collection(db, 'diaries'),
     where('uid', '==', uid),
@@ -25,7 +25,7 @@ export const fetch = async uid => {
       body: doc.data().body,
       rate: doc.data().rate,
       image: doc.data().image,
-      createAt: doc.data().createAt,
+      createdAt: doc.data().createdAt,
     });
   });
   return diaries;
@@ -39,8 +39,7 @@ export const postDiary = async (uid = '', body = '', rate = 1) => {
     rate: rate,
     body: body,
     image: '',
-    createAt: dayjs().format('YYYY/MM/DD HH:mm:ss'),
+    createdAt: dayjs().format('YYYY/MM/DD HH:mm:ss'),
   });
-  console.log('Document written with ID: ', docRef.id);
-  return docRef.id ? truee : false;
+  return docRef.id ? true : false;
 };
