@@ -1,5 +1,5 @@
 <script>
-    import { onDestroy } from "svelte";
+  import { onDestroy } from "svelte";
   import {Slider,TextField,Button} from "smelte";
   import {userId} from "../store";
   import {postDiary} from "../helpers/api";

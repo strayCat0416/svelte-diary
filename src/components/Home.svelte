@@ -1,7 +1,8 @@
 <script>
     import {onMount,onDestroy} from "svelte";
+    import { signInWithGoogle } from "../helpers/firebase";
     import { Router, Link } from "svelte-routing";
-    import {Button} from "smelte";
+    import {Button,ProgressCircular} from "smelte";
     import {userId} from "../store";
     import {fetch} from "../helpers/api";
     import StarRating from 'svelte-star-rating';
@@ -16,11 +17,14 @@
   onDestroy(() =>{unsubscribe;});
 </script>
 
+{#if !uid}
+<Button on:click={signInWithGoogle} class='text-white-900 mt-10'>ログイン</Button>
+{:else}
 {#await promise}
-<p>Loading ...</p>
+<p class='mt-20 flex justify-center'><ProgressCircular /></p>
 {:then diaries}
 <Router>
- {#each diaries as d} 
+ {#each diaries as d}
  <Link to={'/diary' + d.id} class='flex items-center mb-6'>
  <aside class="diary-aside">
    <p class='text-left'>{dayjs(d.createdAt).format('YYYY年MM月DD日')}</p>
@@ -31,9 +35,8 @@
 </Link>
  {/each}
 </Router>
-<p>Loaded ...</p>
 {/await}
-
+{/if}
 
 <style>
 .diary-aside{
@@ -45,5 +48,3 @@
 }
 
 </style>
-<p>HOME</p>
-<Button>テストボタン</Button>
