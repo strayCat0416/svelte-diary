@@ -7,12 +7,9 @@ import {
   signOut,
 } from 'firebase/auth';
 import {getFirestore} from 'firebase/firestore';
+import {getStorage} from 'firebase/storage';
 import {userId} from '../store';
 import Cookies from 'js-cookie';
-
-// TODO: Add SDKs for Firebase products that you want to use
-
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,6 +23,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
 export const db = getFirestore();
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
@@ -37,9 +35,9 @@ export const signInWithGoogle = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
       // The signed-in user info.
-      const user = result.user.uid;
-      // userId = result.user;
+      const user = result.user;
       userId.set(result.user.uid);
+      console.log(user);
       Cookies.set('uid', result.user.uid);
       document.location.reload();
       // ...
@@ -59,14 +57,14 @@ export const signInWithGoogle = () => {
 export const googleSignOut = () => {
   signOut(auth)
     .then(() => {
-      // Cookieの削除
+      // Cookieを削除
       Cookies.remove('uid');
-      //画面を更新
+      // 画面を更新
       document.location.reload();
     })
     .catch(error => {
       alert(
-        'ログアウトできませんでした。通信環境の良い場所で再度実行してください',
+        'ログアウトできませんでした。通信環境の良い場所で再度実行してください。',
       );
     });
 };

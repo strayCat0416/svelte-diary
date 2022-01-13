@@ -25,7 +25,7 @@
 {:then diaries}
 <Router>
  {#each diaries as d}
- <Link to={'/diary' + d.id} class='flex items-center mb-6'>
+ <Link to={'/diary/' + d.id} class='flex items-center mb-6'>
  <aside class="diary-aside">
    <p class='text-left'>{dayjs(d.createdAt).format('YYYY年MM月DD日')}</p>
    <img src ={d.image ? d.image : '/dummy.jpeg'} class="diary-image" alt='diary'>
