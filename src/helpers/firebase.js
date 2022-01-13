@@ -6,8 +6,8 @@ import {
   GoogleAuthProvider,
   signOut,
 } from 'firebase/auth';
-import {getFirestore} from 'firebase/firestore';
 import {getStorage} from 'firebase/storage';
+import {getFirestore} from 'firebase/firestore';
 import {userId} from '../store';
 import Cookies from 'js-cookie';
 
@@ -23,7 +23,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const storage = getStorage(app);
+
+export const storage = getStorage(app); //appに初期化された情報が入っている
 export const db = getFirestore();
 const provider = new GoogleAuthProvider();
 const auth = getAuth();

@@ -15,15 +15,13 @@
           alert('日記の内容は10文字以上書いてください')
           return false;
       }
-      console.log('submit!');
-      console.log(uid,rate,body);
       //ここにfirestoreでPOSTする関数を呼び出す
-      const result = await postDiary(uid,body,rate);
+      const result = await postDiary(uid,body,rate,image);
       if(!result){
           alert('日記の追加が失敗しました。')
         }else{
           alert('日記が保存されました！')
-          document.location.href='/';
+          document.location.href = '/';
       }
   }
 
