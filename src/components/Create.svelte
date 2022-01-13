@@ -38,5 +38,4 @@
 <Slider class="mb-4" min="1" max="10" bind:value={rate} />
 <TextField label="日記の本文" class="bg-white-900" bind:value={body} textarea rows="5" outlined />
 <Button type='submit' class="text-white-900">日記を保存</Button>
-
 </form>
