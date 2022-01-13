@@ -3,8 +3,8 @@
     import {Slider,TextField,Button,ProgressCircular} from "smelte";
     import { getDiary,updateDiary } from "../helpers/api";
     import dayjs from "dayjs";
+import { add_classes } from "svelte/internal";
     export let id;
-    console.log(id);
     let promise = getDiary();
     let rate,body;
     onMount( async() =>{
@@ -14,8 +14,13 @@
         console.log(promise);
     })
     const submit = async() =>{
-        console.log(promise)
-        const returnValue = await updateDiary(id, body, rate);
+        const returnValue = await updateDiary(id, body, rate);//バインディングされている値
+        if(returnValue){
+            alert('日記の更新が完了しました。')
+        }else{
+            alert('更新ができませんでした。やり直してください。');
+            document.location.href('/');
+        }
     }
 </script>
 {#await promise}

@@ -62,12 +62,18 @@ export const getDiary = async (id = 'test') => {
   }
 };
 
+//↓後でDiaryコンポーネントから読み込んで発動させる
 export const updateDiary = async (id = '', body = '', rate = 1, image = '') => {
-  const diaryRef = doc(db, 'diaries', id);
-  // Set the "capital" field of the city 'DC'
+  const diaryRef = doc(db, 'diaries', id); //firebaseのDBのdiariesというコレクションからidを取得して指定
+  //もしDBからidが上手く指定できていなかった場合
+  if (!diaryRef) {
+    return false;
+  }
   await updateDoc(diaryRef, {
+    //ここDiaryコンポーネントでデータバインディングされているものが入る
     body: body,
     rate: rate,
     image: '',
   });
+  return true;
 };
