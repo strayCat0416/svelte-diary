@@ -11,7 +11,7 @@
 
 </script>
 
-<footer  class="flex item-center justify-around bg-secondary-900">
+<footer  class="flex item-center justify-around bg-secondary-900 dark:bg-dark-900">
     <Router>
         <Link class="block mb-3" to="/">Home</Link>
         <Link class="block mb-3" to="about">日記の効果とは？</Link>

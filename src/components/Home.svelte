@@ -26,7 +26,7 @@
 {#if !uid}
 <Button on:click={signInWithGoogle} class='text-white-900 mt-10'>ログイン</Button>
 {:else}
-<section>
+<section class='m-auto mb-6 w-6/12'>
   <h5>日記を検索</h5>
 <TextField type='month' bind:value={filterMonth} on:change={filterHandle} />
 </section>
