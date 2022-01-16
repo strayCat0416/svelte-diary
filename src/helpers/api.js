@@ -7,18 +7,34 @@ import {
   where,
   getDocs,
   orderBy,
+  limit,
   updateDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import {db, storage} from './firebase';
 import dayjs from 'dayjs';
 
-export const fetch = async (uid = '') => {
-  const q = query(
-    collection(db, 'diaries'),
-    where('uid', '==', uid),
-    orderBy('createdAt', 'desc'),
-  );
+export const fetch = async (uid = '', filterMonth = null) => {
+  let q;
+
+  if (filterMonth) {
+    filterMonth = filterMonth.replace('-', '/');
+    q = query(
+      collection(db, 'diaries'),
+      where('uid', '==', uid),
+      where('createdAt', '>=', filterMonth + '/01'),
+      where('createdAt', '<=', filterMonth + '/31'),
+      limit(31),
+    );
+  } else {
+    q = query(
+      collection(db, 'diaries'),
+      where('uid', '==', uid),
+      orderBy('createdAt', 'desc'),
+      limit(31),
+    );
+  }
 
   const querySnapshot = await getDocs(q);
   let diaries = [];
@@ -83,17 +99,53 @@ export const getDiary = async (id = 'test') => {
 };
 
 //↓後でDiaryコンポーネントから読み込んで発動させる
-export const updateDiary = async (id = '', body = '', rate = 1, image = '') => {
+export const updateDiary = async (
+  id = '',
+  body = '',
+  rate = 1,
+  image = null,
+) => {
+  let uploadResult = '';
+  if (image.name) {
+    const storageRef = ref(storage); //基準点を取得
+    const ext = image.name.split('.').pop(); // 拡張子を取得
+    const hashName = Math.random().toString(36).slice(-8); // 画像ファイル名を固定しておく
+    const uploadRef = ref(storageRef, `/images/${hashName}.${ext}`); //保存する場所の指定
+    await uploadBytes(uploadRef, image).then(async function (result) {
+      console.log(result);
+      console.log('Uploaded a blob or file!');
+      // ここでダウンロード（表示）URLを取得
+      await getDownloadURL(uploadRef).then(function (url) {
+        uploadResult = url;
+      });
+    });
+  }
   const diaryRef = doc(db, 'diaries', id); //firebaseのDBのdiariesというコレクションからidを取得して指定
   //もしDBからidが上手く指定できていなかった場合
   if (!diaryRef) {
     return false;
   }
-  await updateDoc(diaryRef, {
-    //ここDiaryコンポーネントでデータバインディングされているものが入る
-    body: body,
-    rate: rate,
-    image: '',
-  });
+  let updateData;
+  if (image.name) {
+    updateData = {
+      body: body,
+      rate: rate,
+      image: uploadResult,
+    };
+  } else {
+    updateData = {
+      body: body,
+      rate: rate,
+    };
+  }
+  await updateDoc(diaryRef, updateData);
+  return true;
+};
+
+export const deleteDiary = async id => {
+  if (!id) {
+    return false;
+  }
+  await deleteDoc(doc(db, 'diaries', id));
   return true;
 };
